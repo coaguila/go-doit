@@ -7,13 +7,21 @@ import (
 	"strings"
 )
 
-type Command int
+type todoErr int
 
 const (
-	Echo Command = 0
-	CreateTodo
-	Quit
+	NoErr todoErr = iota
+	NonValidCommand
 )
+
+var commands = map[string]func([]string){ //TODO: add functions here eventually mdr
+
+}
+
+var errMsg = map[todoErr]string{
+	NoErr:           "",
+	NonValidCommand: " NonValidCommand Error: Command is not valid",
+}
 
 type Todo struct {
 	Id    string
@@ -26,17 +34,38 @@ type Todo struct {
 func main() {
 
 	reader := bufio.NewReader(os.Stdin)
-	fmt.Println("Welcome to go-doit!")
-
+	fmt.Println(" Welcome to go-doit!")
+	fmt.Println(" Choose what to do: (1: Create Todo) (2: Check Todo)")
+	// Generate loop for functions
 	for {
-		fmt.Println("Choose what to do: (1: Create Todo) (2: Check Todo)")
-		input, _ := reader.ReadString('\n')
-		req := strings.TrimRight(input, "\n")
 
-		if req == "q" {
+		// Receive and clean new input
+		fmt.Print(" > ")
+		raw, _ := reader.ReadString('\n')
+		rawN := strings.TrimRight(raw, "\n")
+		args := strings.Split(rawN, " ")
+
+		//  Check quit
+		if args[0] == "quit" {
 			break
 		}
-		fmt.Println(req)
+
+		// Check for echo
+		if args[0] == "echo" {
+			fmt.Print(" ")
+			fmt.Println(rawN[5:])
+			continue
+		}
+
+		// Grab functions
+		com, comExists := commands[args[0]]
+
+		if !comExists {
+			fmt.Println(errMsg[NonValidCommand])
+			continue
+		}
+
+		com(args[1:])
 	}
 
 }
