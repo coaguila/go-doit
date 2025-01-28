@@ -7,6 +7,14 @@ import (
 	"strings"
 )
 
+type Command int
+
+const (
+	Echo Command = 0
+	CreateTodo
+	Quit
+)
+
 type Todo struct {
 	Id    string
 	User  string
