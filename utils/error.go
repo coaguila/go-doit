@@ -4,4 +4,5 @@ const (
 	NoErr int = iota
 	NotValidCommand
 	NotValidArgs
+	NotValidParameters
 )
