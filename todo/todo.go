@@ -1,7 +1,10 @@
 package todo
 
 import (
+	"fmt"
 	. "go-doit/utils"
+	"strings"
+	//"strings"
 )
 
 // This file only handles the concepts of the todo's, CLI calls will be handled somewhere else
@@ -35,6 +38,26 @@ func newSimpleTodo(title string, task string) (*SimpleTodo, int) {
 // Creates new instance of a simple todo board
 func newSimpleTodoBoard() (*SimpleTodoBoard, int) {
 	return &SimpleTodoBoard{}, NoErr
+}
+
+/*
+	To string auxillary functions
+*/
+
+func simpleToString(simple *SimpleTodo) string {
+	if simple.Task == "" {
+		return fmt.Sprintf("-----\nTodo: %s\n   Done: %t\n-----\n", simple.Title, (simple.Done == 1))
+	} else {
+		return fmt.Sprintf("-----\nTodo: %s\nDesc: %s\nDone: %t\n-----\n", simple.Title, simple.Task, (simple.Done == 1))
+	}
+}
+
+func boardToString(board *SimpleTodoBoard) string {
+	res := []string{}
+	for i := 0; i < len(*board); i++ {
+		res = append(res, simpleToString(&(*board)[i]))
+	}
+	return strings.Join(res, "")
 }
 
 /*
