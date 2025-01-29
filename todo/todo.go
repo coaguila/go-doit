@@ -4,11 +4,12 @@ import (
 	. "go-doit/utils"
 )
 
-const (
-	COMPLEX_VERSION  string = "0.0.0"
-	MAX_BLOCK_SIZE   int    = 20
-	MAX_COMPLEX_SIZE int    = 20
-)
+// This file only handles the concepts of the todo's, CLI calls will be handled somewhere else
+
+/*
+	Define constants + types + data structures, current mvp
+	TODO: Make more complex structs/types later
+*/
 
 type SimpleTodo struct {
 	Title string // Title, should not be empty
@@ -16,26 +17,10 @@ type SimpleTodo struct {
 	Done  int    // Should be init to 0 and should not depass 1
 }
 
-type ComplexMetadata struct {
-	Title   string // Title, should not be empty
-	Task    string // Description of todo
-	Version string // Shows version of complex
-	Size    int    // How many sub-SimpleTodo
-	Done    int    // Quantity of Sub-SimpleTodo that are done
-}
-
-type BlockTodo struct {
-	Tasks [MAX_BLOCK_SIZE]SimpleTodo
-	Size  int
-}
-
-type ComplexTodo struct {
-	Metadata ComplexMetadata
-	Tasks    [MAX_COMPLEX_SIZE]BlockTodo
-}
+type SimpleTodoBoard []SimpleTodo
 
 /*
-	Init functions to create new default todo structs
+	Define builders for structs
 */
 
 // Creates a new instance of todo
@@ -47,34 +32,21 @@ func newSimpleTodo(title string, task string) (*SimpleTodo, int) {
 	return &SimpleTodo{title, task, 0}, NoErr
 }
 
-// Creates new instance of ComplexMetadata
-func newComplexMetadata(title string, task string) (*ComplexMetadata, int) {
-	if title == "" {
-		return nil, NotValidCommand
-	}
-
-	return &ComplexMetadata{title, task, COMPLEX_VERSION, 0, 0}, NoErr
+// Creates new instance of a simple todo board
+func newSimpleTodoBoard() (*SimpleTodoBoard, int) {
+	return &SimpleTodoBoard{}, NoErr
 }
 
-// Creates new instance of BlockTodo
-func newBlockTodo() (*BlockTodo, int) {
-	return &BlockTodo{[MAX_BLOCK_SIZE]SimpleTodo{}, 0}, NoErr
-}
+/*
+	related functions
+*/
 
-func newComplexTodo(title string, task string) (*ComplexTodo, int) {
-	if title == "" {
-		return nil, NotValidParameters
+func addNewToBoard(board *SimpleTodoBoard, title string, task string) int {
+	newSimpleTodo, err := newSimpleTodo(title, task)
+	if err != NoErr {
+		return err
 	}
 
-	metadata, mErr := newComplexMetadata(title, task)
-	if mErr != NoErr {
-		return nil, mErr
-	}
-
-	block, bErr := newBlockTodo()
-	if bErr != NoErr {
-		return nil, bErr
-	}
-
-	return &ComplexTodo{*metadata, [MAX_COMPLEX_SIZE]BlockTodo{*block}}, NoErr
+	*board = append(*board, *newSimpleTodo)
+	return err
 }
