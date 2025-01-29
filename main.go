@@ -5,30 +5,20 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"go-doit/utils"
 )
 
-type todoErr int
+// Error handling
+var errMsg = map[int]string{
+	utils.NoErr:           "",
+	utils.NotValidCommand: " NotValidCommand Error: Command is not valid",
+	utils.NotValidArgs:    "NotValidArgs: Arguments passed are not valid",
+}
 
-const (
-	NoErr todoErr = iota
-	NonValidCommand
-)
-
+// Handling commands
 var commands = map[string]func([]string){ //TODO: add functions here eventually mdr
 
-}
-
-var errMsg = map[todoErr]string{
-	NoErr:           "",
-	NonValidCommand: " NonValidCommand Error: Command is not valid",
-}
-
-type Todo struct {
-	Id    string
-	User  string
-	Title string
-	Task  string
-	Done  bool
 }
 
 func main() {
@@ -61,7 +51,7 @@ func main() {
 		com, comExists := commands[args[0]]
 
 		if !comExists {
-			fmt.Println(errMsg[NonValidCommand])
+			fmt.Println(errMsg[utils.NotValidCommand])
 			continue
 		}
 
