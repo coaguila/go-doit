@@ -1,9 +1,7 @@
 package utils
 
-type todoErr int
-
 const (
-	NoErr todoErr = iota
+	NoErr int = iota
 	NotValidCommand
 	NotValidArgs
 )
